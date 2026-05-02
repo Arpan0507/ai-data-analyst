@@ -1,5 +1,5 @@
 import { useState } from 'react'
-
+const API_BASE = "https://ai-data-analyst-backend-xyt7.onrender.com"
 export default function QueryChat({ sessionId }) {
   const [question, setQuestion] = useState('')
   const [messages, setMessages] = useState([])
@@ -15,7 +15,7 @@ export default function QueryChat({ sessionId }) {
     setLoading(true)
 
     try {
-      const res = await fetch(`/api/query/${sessionId}`, {
+      const res = await fetch(`${API_BASE}/api/query/${sessionId}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question: q, session_id: sessionId }),
