@@ -47,7 +47,7 @@ def generate_report(
         "columns_removed": cols_before - cols_after,
     }
 
-    # Chart data with base64 encoded images
+    # Chart data
     chart_data = []
     for chart in charts:
         chart_entry = {
@@ -56,15 +56,8 @@ def generate_report(
             "filename": chart.filename,
             "x_col": chart.x_col,
             "y_col": chart.y_col,
+            "image_base64": chart.image_base64,
         }
-        # Encode image as base64 for frontend
-        if os.path.exists(chart.filepath):
-            try:
-                with open(chart.filepath, "rb") as f:
-                    img_data = base64.b64encode(f.read()).decode("utf-8")
-                chart_entry["image_base64"] = img_data
-            except Exception:
-                chart_entry["image_base64"] = None
         chart_data.append(chart_entry)
 
     # Execution log

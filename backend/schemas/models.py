@@ -97,9 +97,10 @@ class InsightItem(BaseModel):
 class ChartMetadata(BaseModel):
     """Metadata for a generated chart."""
     chart_type: str
-    filepath: str
-    filename: str
     title: str
+    filepath: Optional[str] = None
+    filename: Optional[str] = None
+    image_base64: str = ""
     x_col: str = ""
     y_col: str = ""
 

@@ -318,6 +318,9 @@ def _auto_generate_charts(
 # Helpers
 # ---------------------------------------------------------------------------
 
+import base64
+import io
+
 def _save_chart(
     fig: plt.Figure,
     output_dir: str,
@@ -326,17 +329,38 @@ def _save_chart(
     col_name: str,
     spec: VisualizationSpec,
 ) -> ChartMetadata:
-    """Save a matplotlib figure and return metadata."""
+    """
+    Save a matplotlib figure (optional) and return metadata with Base64 encoding.
+    
+    This ensures charts work on platforms without persistent storage (like Render free).
+    """
     filename = f"{session_id}_{chart_type}_{col_name}_{uuid.uuid4().hex[:6]}.png"
     filepath = os.path.join(output_dir, filename)
     fig.tight_layout()
-    fig.savefig(filepath, dpi=150, bbox_inches="tight", facecolor=fig.get_facecolor())
+
+    # 1. Generate Base64 version (Memory-safe)
+    buf = io.BytesIO()
+    fig.savefig(buf, format="png", dpi=150, bbox_inches="tight", facecolor=fig.get_facecolor())
+    buf.seek(0)
+    image_base64 = base64.b64encode(buf.read()).decode("utf-8")
+    buf.close()
+
+    # 2. Try to save to disk (Optional/Best effort)
+    try:
+        os.makedirs(output_dir, exist_ok=True)
+        fig.savefig(filepath, dpi=150, bbox_inches="tight", facecolor=fig.get_facecolor())
+    except Exception:
+        # Ignore disk errors on ephemeral platforms
+        filepath = None
+        filename = None
+
     plt.close(fig)
 
     return ChartMetadata(
         chart_type=chart_type,
         filepath=filepath,
         filename=filename,
+        image_base64=image_base64,
         title=spec.title or f"{chart_type} of {col_name}",
         x_col=spec.x,
         y_col=spec.y,

@@ -1,0 +1,26 @@
+# Python
+backend/venv/
+backend/__pycache__/
+backend/.pytest_cache/
+backend/*.pyc
+backend/data/uploads/*
+backend/data/charts/*
+backend/data/memory/*
+
+# Node / Frontend
+frontend/node_modules/
+frontend/dist/
+frontend/.eslintcache
+
+# Version Control
+.git/
+.gitignore
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile
+.dockerignore
+deployment_guide.md

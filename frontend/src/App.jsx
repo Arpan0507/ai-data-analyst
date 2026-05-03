@@ -7,6 +7,7 @@ import ChartGallery from './components/ChartGallery'
 import InsightsPanel from './components/InsightsPanel'
 
 import ReportView from './components/ReportView'
+import { getApiUrl } from './api'
 
 const PIPELINE_STEPS = [
   { key: 'profiling',           label: 'Profile',       icon: '📋' },
@@ -40,7 +41,7 @@ export default function App() {
       const formData = new FormData()
       formData.append('file', file)
 
-      const uploadRes = await fetch('/api/upload', {
+      const uploadRes = await fetch(getApiUrl('/api/upload'), {
         method: 'POST',
         body: formData,
       })
@@ -62,7 +63,7 @@ export default function App() {
       // rejects an attempt, so we just reflect whatever it reports.
       const pollInterval = setInterval(async () => {
         try {
-          const statusRes = await fetch(`/api/status/${uploadData.session_id}`)
+          const statusRes = await fetch(getApiUrl(`/api/status/${uploadData.session_id}`))
           if (!statusRes.ok) return
           const s = await statusRes.json()
           setCurrentStep(s.status)
@@ -74,7 +75,7 @@ export default function App() {
       }, 2000)
 
       // Start analysis (long-running — wait for full response)
-      const analyzeRes = await fetch(`/api/analyze/${uploadData.session_id}`, {
+      const analyzeRes = await fetch(getApiUrl(`/api/analyze/${uploadData.session_id}`), {
         method: 'POST',
       })
 
@@ -264,7 +265,7 @@ export default function App() {
               </button>
               <a
                 className="btn btn-secondary"
-                href={`/api/download/${report.session_id}`}
+                href={getApiUrl(`/api/download/${report.session_id}`)}
                 download
               >
                 ⬇️ Download Cleaned CSV
