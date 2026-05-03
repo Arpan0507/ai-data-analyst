@@ -1,9 +1,14 @@
 node_modules/
 venv/
 __pycache__/
+*.pyc
 .env
+.env.*
+!.env.example
 .DS_Store
 dist/
 backend/data/charts/*
 backend/data/uploads/*
 backend/data/memory/*
+*.egg-info/
+.pytest_cache/

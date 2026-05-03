@@ -3,6 +3,12 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  // Explicitly expose VITE_ prefixed env vars at build time (needed on Vercel)
+  envPrefix: 'VITE_',
+  build: {
+    outDir: 'dist',
+    sourcemap: false,
+  },
   server: {
     port: 5173,
     proxy: {
@@ -19,3 +25,4 @@ export default defineConfig({
     },
   },
 })
+

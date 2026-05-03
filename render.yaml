@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: ai-data-analyst-api
+    runtime: python
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m uvicorn main:app --host 0.0.0.0 --port $PORT
+    plan: free
+    envVars:
+      - key: OPENROUTER_API_KEY
+        sync: false          # Set this manually in Render dashboard
+      - key: FRONTEND_URL
+        sync: false          # Set to your Vercel URL in Render dashboard
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: CRITIC_MAX_RETRIES
+        value: "1"           # Reduce retries on free tier to avoid timeouts
+      - key: MAX_FILE_SIZE_MB
+        value: "20"          # Keep uploads small on free tier
